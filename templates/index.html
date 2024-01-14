@@ -1,0 +1,169 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ChatBot</title>
+ 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-66hpxTNECUHQAcI53Xj+qh0f3eC8LCpG5l0+T6j0nfOVqTzQhcz3lFvxce5N3/0nq9t2RQ7jk2u5V1/viFVc0g==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+    body {
+      background-color: #374151;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 1000px;
+    }
+
+    h1 {
+      background-color: #343a40;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    #chat-container {
+      position: relative;
+      z-index: 0;
+      margin: auto;
+      width: 60%;
+      padding: 100px;
+      background-color:#374151;
+      /* border-radius: 12px; */
+      /* box-shadow: 0 0 10px black; */
+      margin-top: auto; 
+      /* max-height: 400px; */
+    }
+
+    #chatbox {
+      overflow-y: auto;
+      position: relative;
+      max-height: 400px;
+    }
+
+    #userInput {
+      margin-top: 20px;
+    }
+
+    #textInput {
+      width: 880px;
+      height: 60px;
+      font-weight: 1000;
+      margin-top: 200px;
+      font-size: 16px;
+      border: 1px solid #151617;
+      border-radius: 10px;
+      box-sizing: border-box;
+      background-color: white; /* White background color */
+    }
+
+    .userText {
+      color: #ffffff;
+      font-size: 16px;
+      text-align: right;
+      margin: 10px;
+      margin-right: 10px;
+    }
+
+    .userText span {
+      background-color: #151617;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    .btn1{
+      margin-top: 200px;
+      height: 60px;
+      width: 80px;
+      font-size: large;
+      border:solid 1px #0f0d0d;
+      border-radius: 50px;
+      font-weight: 1000;
+    }
+    .botText {
+      color: white;
+      font-size: 16px;
+      text-align: left;
+      margin: 10px 0;
+      max-width: 80%; /* Set maximum width */
+      word-wrap: break-word; 
+    }
+
+    .botText span {
+      background-color: #0f0d0d;
+      padding: 10px;
+      border-radius: 12px;
+      color: white;
+      display: inline-block;
+    }
+
+    .userHeading, .botHeading {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .userHeading {
+      color: white;
+      text-align: right;
+    }
+
+    .botHeading {
+      color: white;
+      text-align: left;
+    }
+    li{
+      display: inline-block;
+      list-style: none;
+    }
+    footer{
+      position: static;
+      z-index: 1;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI ChatBot</h1>
+  <div id="chat-container">
+    <div id="chatbox"></div>
+  
+    <footer><ul>
+      <li><input id="textInput" type="text" name="msg" class="form-control" placeholder="Enter message here..." />
+      </li>
+      <li>
+        <button class="btn1" type="button" onclick="getBotResponse()">Send
+          
+        </button>
+    </li>
+    </ul></footer>
+  </div>
+  <script>
+    function getBotResponse() {
+      var rawText = $("#textInput").val();
+      var userHtml = '<div class="userHeading">YOU:&nbsp </div><p class="userText"><span>' + rawText + "</span></p>";
+      $("#textInput").val("");
+      $("#chatbox").append(userHtml);
+      $("#chatbox").animate({ scrollTop: $('#chatbox').prop("scrollHeight") }, 500);
+      $.get("/get", { msg: rawText }).done(function(data) {
+        var botHtml = '<div class="botHeading">ChatBot: </div><p class="botText"><span>' + data + "</span></p>";
+        $("#chatbox").append(botHtml);
+        $("#chatbox").animate({ scrollTop: $('#chatbox').prop("scrollHeight") }, 500);
+      });
+    }
+    $("#textInput").keypress(function(e) {
+      if (e.which == 13) {
+        getBotResponse();
+      }
+    });
+  </script>
+</body>
+</html>
